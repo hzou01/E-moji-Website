@@ -71,24 +71,18 @@ selfieSegmentation.setOptions({
 
 selfieSegmentation.onResults(onResults);
 
-// 5. Start the Camera with a "Warm-up" Delay
+/// 5. Optimized "Lightweight" Start
 const camera = new Camera(videoElement, {
     onFrame: async () => {
-        try {
-            await selfieSegmentation.send({image: videoElement});
-        } catch (e) {
-            console.error("AI frame dropped:", e);
-        }
+        await selfieSegmentation.send({image: videoElement});
     },
-    width: 1280,
-    height: 720
+    // Removing fixed width/height allows the Mac to pick its own default
 });
 
-// Instead of starting instantly, we wait 500ms
-// This prevents the Mac 'Timeout' by letting the sensor wake up first
-console.log("Waiting for camera hardware to initialize...");
-setTimeout(() => {
-    camera.start()
-        .then(() => console.log("Camera successfully active."))
-        .catch(err => console.error("Final camera check failed:", err));
-}, 500);
+// We use a "User Gesture" to start the camera if the auto-start fails
+console.log("Attempting to wake up camera...");
+camera.start().catch(err => {
+    console.error("Auto-start failed, waiting for user click:", err);
+    // If it fails, we change the button text to 'Enable Camera'
+    spinBtn.innerText = "ENABLE CAMERA TO START";
+});
