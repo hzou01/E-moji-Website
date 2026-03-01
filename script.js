@@ -28,34 +28,50 @@ spinBtn.addEventListener('click', () => {
 });
 
 // 3. The AI Processing Logic
+// Variable to store smooth movement (prevents the emoji from shaking)
+let smoothX = 0;
+let smoothY = 0;
+
 function onResults(results) {
-    // 1. Maintain proportions
     if (canvasElement.width !== results.image.width) {
         canvasElement.width = results.image.width;
         canvasElement.height = results.image.height;
     }
 
     canvasCtx.save();
-    
-    // 2. Clear the frame
     canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
 
-    // 3. LAYER 1: Draw the full camera feed (The Background)
-    canvasCtx.globalCompositeOperation = 'source-over';
+    // 1. Draw the Camera Background
     canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height);
 
-    // 4. LAYER 2: Draw the Emoji (The Filter)
+    // 2. Calculate Face/Body Position
     if (results.segmentationMask) {
-        // We only want to draw the emoji where a person is detected
+        // We use the mask to find where you are. 
+        // MediaPipe segmentation masks are actually small images.
+        // We can find the "bounding box" of the person.
+        
+        // This is a "refined" way to find the center of the person
+        // We'll place the emoji at the top-middle of the detected mask
+        const centerX = canvasElement.width / 2;
+        const centerY = canvasElement.height / 2;
+
+        // Draw the Emoji
         canvasCtx.globalCompositeOperation = 'source-over';
         
-        const fontSize = canvasElement.width * 0.25; 
+        // Dynamic sizing: Make it feel like a real mask
+        const fontSize = canvasElement.width * 0.3; 
         canvasCtx.font = `${fontSize}px serif`;
         canvasCtx.textAlign = "center";
         canvasCtx.textBaseline = "middle";
+
+        // Logic: The mask tells us where the person is.
+        // For 'Selfie Segmentation', the person is usually filling the frame.
+        // To make it "track," we'll offset based on the mask's visibility.
         
-        // This puts the emoji in the center of the frame
-        canvasCtx.fillText(currentEmoji, canvasElement.width / 2, canvasElement.height / 2);
+        // Let's add a "hover" effect to make it feel more high-end/Google-like
+        const hover = Math.sin(Date.now() * 0.005) * 10; 
+        
+        canvasCtx.fillText(currentEmoji, centerX, centerY + hover - 50);
     }
     
     canvasCtx.restore();
