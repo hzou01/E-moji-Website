@@ -71,12 +71,24 @@ selfieSegmentation.setOptions({
 
 selfieSegmentation.onResults(onResults);
 
-// 5. Start the Camera
+// 5. Start the Camera with a "Warm-up" Delay
 const camera = new Camera(videoElement, {
     onFrame: async () => {
-        await selfieSegmentation.send({image: videoElement});
+        try {
+            await selfieSegmentation.send({image: videoElement});
+        } catch (e) {
+            console.error("AI frame dropped:", e);
+        }
     },
     width: 1280,
     height: 720
 });
-camera.start();
+
+// Instead of starting instantly, we wait 500ms
+// This prevents the Mac 'Timeout' by letting the sensor wake up first
+console.log("Waiting for camera hardware to initialize...");
+setTimeout(() => {
+    camera.start()
+        .then(() => console.log("Camera successfully active."))
+        .catch(err => console.error("Final camera check failed:", err));
+}, 500);
