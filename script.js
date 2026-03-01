@@ -29,37 +29,39 @@ spinBtn.addEventListener('click', () => {
 
 // 3. The AI Processing Logic
 function onResults(results) {
+    // 1. Match internal canvas resolution to the video feed once
+    if (canvasElement.width !== results.image.width) {
+        canvasElement.width = results.image.width;
+        canvasElement.height = results.image.height;
+    }
+
     canvasCtx.save();
-    
-    // Clear the canvas
     canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
 
-    // 1. Draw the background
+    // 2. Draw the background feed (The Camera)
     canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height);
 
-    // 2. The AI logic
+    // 3. AI Masking Logic
     if (results.segmentationMask) {
-        // We only want to draw where the person IS NOT
-        canvasCtx.globalCompositeOperation = 'destination-out';
-        canvasCtx.drawImage(results.segmentationMask, 0, 0, canvasElement.width, canvasElement.height);
-        
-        // Now draw the background again in those holes
-        canvasCtx.globalCompositeOperation = 'destination-over';
-        canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height);
+        // This creates a subtle "privacy" effect on the person
+        canvasCtx.globalCompositeOperation = 'source-in';
+        canvasCtx.fillStyle = 'rgba(255, 255, 255, 0.1)'; 
+        canvasCtx.fillRect(0, 0, canvasElement.width, canvasElement.height);
 
-        // 3. Put the emoji over the person
+        // 4. Draw the Emoji
         canvasCtx.globalCompositeOperation = 'source-over';
         
-        // This is a "refined" trick: we use the mask to find the top of the head
-        canvasCtx.font = "150px serif";
+        // Dynamic Font Size based on the window width
+        const fontSize = canvasElement.width * 0.25; 
+        canvasCtx.font = `${fontSize}px serif`;
         canvasCtx.textAlign = "center";
+        canvasCtx.textBaseline = "middle";
         
-        // For now, we'll keep it centered, but you can see the person is "cut out"
+        // Place emoji in the center of the frame
         canvasCtx.fillText(currentEmoji, canvasElement.width / 2, canvasElement.height / 2);
     }
     canvasCtx.restore();
 }
-
 // 4. Initialize MediaPipe Selfie Segmentation
 const selfieSegmentation = new SelfieSegmentation({locateFile: (file) => {
     return `https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/${file}`;
