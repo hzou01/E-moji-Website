@@ -1,134 +1,154 @@
 :root {
     --google-blue: #1a73e8;
-    --google-blue-hover: #1765cc;
-    --text-main: #202124;
-    --bg-light: #f8f9fa;
-    --white-translucent: rgba(255, 255, 255, 0.9);
+    --glass-bg: rgba(255, 255, 255, 0.15);
+    --glass-border: rgba(255, 255, 255, 0.3);
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
 body, html {
-    width: 100%;
-    height: 100vh;
+    width: 100%; height: 100vh;
     overflow: hidden;
-    background-color: var(--bg-light);
-    font-family: 'Google Sans', 'Product Sans', Arial, sans-serif;
+    background-color: #000;
+    font-family: 'Google Sans', Arial, sans-serif;
 }
 
-.output_canvas {
+/* Landing Page Pulse */
+#landing-page {
     position: fixed;
-    top: 50%; 
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 90vw;
-    max-width: 750px; /* Reduced from 900px to prevent overlap */
-    aspect-ratio: 16 / 9;
-    border-radius: 32px;
-    background: #000;
-    box-shadow: 0 40px 80px rgba(0,0,0,0.15);
-    z-index: 1;
-    object-fit: cover;
-}
-
-#ui-container {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100vw; height: 100vh;
-    pointer-events: none;
-    z-index: 999;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-#header {
-    padding-top: 50px;
-    text-align: center;
-    pointer-events: auto;
-}
-
-h1 {
-    font-weight: 500;
-    font-size: 1.6rem;
-    letter-spacing: 10px;
-    color: var(--text-main);
-    margin-bottom: 8px;
-}
-
-#status-tag {
-    font-size: 0.8rem;
-    color: #5f6368;
-    letter-spacing: 2px;
-    font-weight: 500;
-}
-
-#category-label {
-    color: var(--google-blue);
-    text-transform: uppercase;
-}
-
-#controls {
-    padding-bottom: 50px; /* Adjusted spacing */
+    inset: 0;
+    background: #ffffff; /* Clean white background to make the glass pop */
     display: flex;
     justify-content: center;
-    pointer-events: auto;
-}
-
-/* Updated Slot Machine Pill */
-#slot-machine {
-    background: var(--white-translucent);
-    backdrop-filter: blur(25px);
-    -webkit-backdrop-filter: blur(25px);
-    padding: 12px 28px;
-    border-radius: 100px;
-    display: flex;
     align-items: center;
-    gap: 20px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-    border: 1px solid rgba(255, 255, 255, 0.5);
+    z-index: 2000;
+    transition: opacity 0.8s ease;
 }
 
-#emoji-display {
-    font-size: 2.2rem;
+#activate-token {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    
+    /* 1. Liquid Glass Base */
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    
+    /* 2. Glass Borders & Neumorphic Shadow */
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    
+    /* 3. The Radiating Animation */
+    animation: glass-radiate 1s infinite;
     transition: transform 0.2s ease;
 }
 
-/* Vertical line between emoji and button */
-.divider {
-    width: 1px;
-    height: 30px;
-    background-color: rgba(0, 0, 0, 0.1);
-}
-
-button {
-    background-color: var(--google-blue);
-    color: white;
-    border: none;
-    padding: 12px 28px;
-    border-radius: 50px;
-    font-weight: 500;
-    font-size: 0.9rem;
+/* The Pulsing Liquid Layer inside the glass */
+#activate-token {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     cursor: pointer;
-    min-width: 200px; /* Prevents button jumping */
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 2001;
+    
+    /* 1. Liquid Glass Base */
+    background: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    
+    /* 2. Soft Glass Borders */
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    
+    /* 3. Base Shadow (Permanent) */
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
+    
+    /* 4. The Consistent Pulse Animation */
+    /* Changed to 'linear' for constant speed */
+    animation: glass-radiate-consistent 1.5s linear infinite;
+    transition: transform 0.2s ease;
 }
 
-button:hover {
-    transform: scale(1.05);
-    background-color: var(--google-blue-hover);
-    box-shadow: 0 4px 15px rgba(26, 115, 232, 0.4);
+.glass-text {
+    color: #000000;
+    font-weight: 500;
+    font-size: 1.1rem;
+    z-index: 10;
+    letter-spacing: 0.8px;
+    user-select: none;
 }
 
-button:active {
-    transform: scale(0.95);
+/* --- THE CONSISTENT WIDE RADIANT PULSE --- */
+
+@keyframes glass-radiate-consistent {
+    0% {
+        /* Start: Tight around the button, fairly visible */
+        box-shadow: 0 0 0 0 rgba(26, 115, 232, 0.4), 
+                    0 15px 35px rgba(0, 0, 0, 0.05);
+    }
+    100% {
+        /* End: Wide reach, completely invisible */
+        box-shadow: 0 0 40px 60px rgba(26, 115, 232, 0), 
+                    0 15px 35px rgba(0, 0, 0, 0.05);
+    }
 }
 
-button:disabled {
-    background-color: #bdc1c6;
-    cursor: not-allowed;
+#activate-token:hover {
+    transform: scale(1.02);
+}
+
+/* Video Canvas */
+.output_canvas {
+    position: fixed; top: 0; left: 0;
+    width: 100vw; height: 100vh; object-fit: cover; z-index: 1;
+}
+
+#app-container.hidden { opacity: 0; visibility: hidden; }
+
+/* The Header HUD */
+#header {
+    position: fixed; top: 40px; left: 50%;
+    transform: translateX(-50%);
+    text-align: center; z-index: 10; width: 100%;
+}
+
+h1 {
+    color: white; font-weight: 500; font-size: 1.2rem;
+    letter-spacing: 8px; margin-bottom: 20px;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+}
+
+/* The AI Glass Bubble */
+#ai-status-bubble {
+    display: inline-flex; align-items: center;
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    padding: 10px 20px; border-radius: 100px;
+    gap: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+#emoji-preview { font-size: 1.8rem; }
+
+.vr-divider { width: 1px; height: 25px; background: rgba(255,255,255,0.3); }
+
+.status-text { display: flex; flex-direction: column; align-items: flex-start; }
+
+.label {
+    font-size: 0.65rem; color: #4285f4;
+    font-weight: bold; letter-spacing: 1.5px;
+}
+
+#category-display {
+    font-size: 0.85rem; color: white;
+    font-weight: 500; text-transform: uppercase;
 }

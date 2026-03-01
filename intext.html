@@ -3,35 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-MOJI | Multi-Face Swarm</title>
+    <title>E-MOJI | HUD</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Product+Sans:wght@400;500&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <video class="input_video" style="display:none" playsinline></video>
-    <canvas class="output_canvas"></canvas>
+    <div id="landing-page">
+        <div id="activate-token">
+        <span class="glass-text">Activate E-moji™</span>
+        </div>
+    </div>
 
-    <div id="ui-container">
-        <header id="header">
-            <h1>E-MOJI</h1>
-            <p id="status-tag">CATEGORY: <span id="category-label">SMILEYS</span></p>
-        </header>
+    <div id="app-container" class="hidden">
+        <video class="input_video" style="display:none" playsinline></video>
+        <canvas class="output_canvas"></canvas>
 
-        <footer id="controls">
-            <div id="slot-machine">
-                <div id="emoji-display">😀</div>
+        <div id="ui-container">
+            <header id="header">
+                <h1>E-MOJI™</h1>
                 
-                <div class="divider"></div>
-
-                <button id="spin-button">RANDOMIZE CATEGORY</button>
-            </div>
-        </footer>
+                <div id="ai-status-bubble">
+                    <div id="emoji-preview">✨</div>
+                    <div class="vr-divider"></div>
+                    <div class="status-text">
+                        <span id="category-display">CATEGORY: INITIALIZING</span>
+                    </div>
+                </div>
+            </header>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
     <script src="script.js"></script>
-
 </body>
 </html>
