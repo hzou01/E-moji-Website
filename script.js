@@ -29,36 +29,34 @@ spinBtn.addEventListener('click', () => {
 
 // 3. The AI Processing Logic
 function onResults(results) {
-    // Set canvas size to match the window
-    canvasElement.width = window.innerWidth;
-    canvasElement.height = window.innerHeight;
-
     canvasCtx.save();
+    
+    // Clear the canvas
     canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
 
-    // Draw the webcam feed
+    // 1. Draw the background
     canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height);
 
-    // If a human is detected, replace them
+    // 2. The AI logic
     if (results.segmentationMask) {
-        canvasCtx.globalCompositeOperation = 'source-in';
+        // We only want to draw where the person IS NOT
+        canvasCtx.globalCompositeOperation = 'destination-out';
+        canvasCtx.drawImage(results.segmentationMask, 0, 0, canvasElement.width, canvasElement.height);
         
-        // This creates the "Counter-Surveillance" mask 
-        // We fill the person's shape with a slight blur or solid color
-        canvasCtx.fillStyle = 'rgba(255, 255, 255, 0.2)'; 
-        canvasCtx.fillRect(0, 0, canvasElement.width, canvasElement.height);
+        // Now draw the background again in those holes
+        canvasCtx.globalCompositeOperation = 'destination-over';
+        canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height);
 
-        // Draw the emoji over the detected person
+        // 3. Put the emoji over the person
         canvasCtx.globalCompositeOperation = 'source-over';
-        canvasCtx.font = `${canvasElement.width * 0.2}px serif`; // Scale emoji to screen size
-        canvasCtx.textAlign = "center";
-        canvasCtx.textBaseline = "middle";
         
-        // In this basic experiment, we place the emoji in the center 
-        // whenever a person is detected in the frame.
+        // This is a "refined" trick: we use the mask to find the top of the head
+        canvasCtx.font = "150px serif";
+        canvasCtx.textAlign = "center";
+        
+        // For now, we'll keep it centered, but you can see the person is "cut out"
         canvasCtx.fillText(currentEmoji, canvasElement.width / 2, canvasElement.height / 2);
     }
-    
     canvasCtx.restore();
 }
 
