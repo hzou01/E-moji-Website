@@ -6,16 +6,25 @@
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation"></script>
 </head>
 <body>
-    <div id="ui-layer">
-        <h1>E-MOJI</h1>
-        <div id="slot-machine">
-            <div id="emoji-display">👤</div>
-            <button id="spin-button">START RANDOMIZER</button>
+    <video class="input_video" style="display:none"></video>
+    <canvas class="output_canvas"></canvas>
+
+    <div id="ui-container">
+        <div id="header">
+            <h1>E-MOJI</h1>
+            <p>Counter-Surveillance Experiment No. 01</p>
+        </div>
+
+        <div id="controls">
+            <div id="slot-machine">
+                <div id="emoji-display">👤</div>
+                <button id="spin-button">RANDOMIZE IDENTITY</button>
+            </div>
         </div>
     </div>
-    <video class="input_video" hidden></video>
-    <canvas class="output_canvas"></canvas>
-    
+
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/selfie_segmentation.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

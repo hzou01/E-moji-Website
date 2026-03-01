@@ -1,62 +1,105 @@
-body {
-    margin: 0;
-    padding: 0;
-    background-color: #f8f9fa; /* Google-style light gray */
-    font-family: 'Helvetica Neue', Arial, sans-serif;
-    color: #202124;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
+:root {
+    --google-blue: #1a73e8;
+    --bg-color: #ffffff;
+    --text-main: #202124;
 }
 
-#ui-layer {
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: var(--bg-color);
+    font-family: 'Google Sans', Arial, sans-serif;
+    color: var(--text-main);
+}
+
+/* Make the AI Canvas fill the screen like a mirror */
+.output_canvas {
     position: absolute;
-    top: 20px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 100%;
+    min-height: 100%;
+    object-fit: cover;
+    z-index: 1;
+}
+
+/* UI Overlay Container */
+#ui-container {
+    position: relative;
     z-index: 10;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* This pushes header to top, controls to bottom */
+    pointer-events: none; /* Allows you to "click through" the empty space to the video */
+}
+
+#header {
+    padding: 40px;
     text-align: center;
 }
 
 h1 {
-    font-weight: 300;
-    letter-spacing: 2px;
-    margin-bottom: 10px;
+    font-weight: 400;
+    font-size: 1.5rem;
+    letter-spacing: 4px;
+    margin: 0;
+}
+
+p {
+    font-size: 0.8rem;
+    opacity: 0.6;
+    margin-top: 5px;
+}
+
+/* The Bottom Control Bar */
+#controls {
+    padding-bottom: 60px; /* Space from the very bottom */
+    display: flex;
+    justify-content: center;
+    pointer-events: auto; /* Re-enables clicking for the button */
 }
 
 #slot-machine {
-    background: white;
-    padding: 15px 30px;
-    border-radius: 50px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px); /* Modern frosted glass effect */
+    padding: 12px 24px;
+    border-radius: 100px;
     display: flex;
     align-items: center;
     gap: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    border: 1px solid rgba(255,255,255,0.5);
 }
 
 #emoji-display {
-    font-size: 2rem;
+    font-size: 2.2rem;
+    min-width: 50px;
+    text-align: center;
 }
 
 button {
-    background: #1a73e8; /* Google Blue */
+    background-color: var(--google-blue);
     color: white;
     border: none;
-    padding: 10px 20px;
-    border-radius: 20px;
+    padding: 14px 28px;
+    border-radius: 50px;
+    font-size: 0.9rem;
     font-weight: 500;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 button:hover {
-    background: #1765cc;
+    background-color: #1765cc;
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(26, 115, 232, 0.3);
 }
 
-canvas {
-    width: 90vw;
-    max-width: 1000px;
-    border-radius: 20px;
-    background: #000;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+button:active {
+    transform: scale(0.95);
 }
