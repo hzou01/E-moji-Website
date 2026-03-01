@@ -29,39 +29,38 @@ spinBtn.addEventListener('click', () => {
 
 // 3. The AI Processing Logic
 function onResults(results) {
-    // 1. Match internal canvas resolution to the video feed once
+    // 1. Maintain proportions
     if (canvasElement.width !== results.image.width) {
         canvasElement.width = results.image.width;
         canvasElement.height = results.image.height;
     }
 
     canvasCtx.save();
+    
+    // 2. Clear the frame
     canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
 
-    // 2. Draw the background feed (The Camera)
+    // 3. LAYER 1: Draw the full camera feed (The Background)
+    canvasCtx.globalCompositeOperation = 'source-over';
     canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height);
 
-    // 3. AI Masking Logic
+    // 4. LAYER 2: Draw the Emoji (The Filter)
     if (results.segmentationMask) {
-        // This creates a subtle "privacy" effect on the person
-        canvasCtx.globalCompositeOperation = 'source-in';
-        canvasCtx.fillStyle = 'rgba(255, 255, 255, 0.1)'; 
-        canvasCtx.fillRect(0, 0, canvasElement.width, canvasElement.height);
-
-        // 4. Draw the Emoji
+        // We only want to draw the emoji where a person is detected
         canvasCtx.globalCompositeOperation = 'source-over';
         
-        // Dynamic Font Size based on the window width
         const fontSize = canvasElement.width * 0.25; 
         canvasCtx.font = `${fontSize}px serif`;
         canvasCtx.textAlign = "center";
         canvasCtx.textBaseline = "middle";
         
-        // Place emoji in the center of the frame
+        // This puts the emoji in the center of the frame
         canvasCtx.fillText(currentEmoji, canvasElement.width / 2, canvasElement.height / 2);
     }
+    
     canvasCtx.restore();
 }
+
 // 4. Initialize MediaPipe Selfie Segmentation
 const selfieSegmentation = new SelfieSegmentation({locateFile: (file) => {
     return `https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/${file}`;
