@@ -1,5 +1,5 @@
 :root {
-    --google-blue: #1a73e8;
+    --google-blue: #fe6208;
     --glass-bg: rgba(255, 255, 255, 0.15);
     --glass-border: rgba(255, 255, 255, 0.3);
 }
@@ -87,7 +87,7 @@ body, html {
 }
 
 .glass-text {
-    color: #1a73e8;
+    color: #fe6208;
     font-weight: 500;
     font-size: 1rem;
     line-height: 2;
@@ -154,7 +154,7 @@ h1 {
 .status-text { display: flex; flex-direction: column; align-items: flex-start; }
 
 .label {
-    font-size: 0.65rem; color: #4285f4;
+    font-size: 0.65rem; color: #fe6208;
     font-weight: bold; letter-spacing: 1.5px;
 }
 
